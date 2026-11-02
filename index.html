@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dave Vu – Data Analyst</title>
+<meta name="description" content="Dave Vu, data analyst in Perth focused on insurance and actuarial analytics. Projects on APRA general insurance performance and ICA catastrophe losses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f9fc;
+    --surface: #ffffff;
+    --ink: #14213d;
+    --slate: #4e5d73;
+    --rule: #d8dfea;
+    --storm: #14213d;
+    --cool: #9fb1c9;
+    --breakeven: #b42318;
+    --focus: #c77d00;
+    --measure: 68ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1726;
+      --surface: #16213a;
+      --ink: #e6ecf5;
+      --slate: #a7b4c8;
+      --rule: #2a3754;
+      --storm: #e6ecf5;
+      --cool: #5f7699;
+      --breakeven: #f97066;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    font-variant-numeric: tabular-nums;
+  }
+  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* Header */
+  .site-header { border-bottom: 1px solid var(--rule); }
+  .site-header .wrap {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; padding-top: 1rem; padding-bottom: 1rem; flex-wrap: wrap;
+  }
+  .wordmark { font-weight: 600; text-decoration: none; letter-spacing: -0.01em; }
+  .site-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.95rem; }
+  .site-nav a { text-decoration: none; color: var(--slate); }
+  .site-nav a:hover { color: var(--ink); text-decoration: underline; }
+
+  /* Hero */
+  .hero { padding: 4.5rem 0 4rem; }
+  .hero .wrap {
+    display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 3.5rem; align-items: center;
+  }
+  .hero h1 {
+    font-size: clamp(2.6rem, 6vw, 4.25rem);
+    line-height: 1.02; letter-spacing: -0.035em;
+    font-weight: 600; margin: 0 0 1rem;
+  }
+  .role { font-size: 1.3rem; line-height: 1.35; margin: 0 0 1.25rem; color: var(--ink); max-width: 30ch; }
+  .intro { color: var(--slate); max-width: 52ch; margin: 0 0 2rem; }
+  .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .button {
+    display: inline-block; padding: 0.7rem 1.15rem; border-radius: 6px;
+    font-weight: 500; font-size: 0.98rem; text-decoration: none;
+    border: 1px solid var(--ink);
+  }
+  .button.primary { background: var(--ink); color: var(--bg); }
+  .button.secondary { color: var(--ink); }
+  .button:hover { text-decoration: underline; }
+
+  /* Hero figure: the seasonality chart */
+  .season-figure { margin: 0; }
+  .season-figure figcaption { margin-top: 0.9rem; font-size: 0.92rem; color: var(--slate); max-width: 48ch; }
+  .season-figure figcaption strong { color: var(--ink); font-weight: 500; }
+  .season-chart { width: 100%; height: auto; display: block; overflow: visible; }
+  .season-chart text { font-family: "IBM Plex Sans", system-ui, sans-serif; fill: var(--ink); }
+  .season-chart .muted { fill: var(--slate); font-size: 12px; }
+  .season-chart .state { font-size: 15px; font-weight: 600; }
+  .season-chart .value { font-size: 13px; font-weight: 500; }
+  .season-chart .bar-storm { fill: var(--storm); }
+  .season-chart .bar-cool { fill: var(--cool); }
+  .season-chart .axis { stroke: var(--rule); stroke-width: 1; }
+  .season-chart .breakeven { stroke: var(--breakeven); stroke-width: 1.5; stroke-dasharray: 4 4; }
+  .season-chart .breakeven-label { fill: var(--breakeven); font-size: 12px; }
+  .bar-grow { transform-box: fill-box; transform-origin: left center; animation: grow 900ms cubic-bezier(.2,.7,.2,1) both; }
+  .bar-grow.d2 { animation-delay: 120ms; } .bar-grow.d3 { animation-delay: 240ms; } .bar-grow.d4 { animation-delay: 360ms; }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) { .bar-grow { animation: none; } }
+  .legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-size: 0.88rem; color: var(--slate); margin-bottom: 0.6rem; }
+  .legend span { white-space: nowrap; }
+  .legend span::before {
+    content: ""; display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 2px;
+    margin-right: 0.4rem; vertical-align: -0.1rem;
+  }
+  .legend .storm::before { background: var(--storm); }
+  .legend .cool::before { background: var(--cool); }
+
+  /* Sections */
+  section { padding: 4.5rem 0; border-top: 1px solid var(--rule); }
+  h2 { font-size: 1.85rem; letter-spacing: -0.02em; line-height: 1.15; font-weight: 600; margin: 0 0 0.6rem; }
+  .section-lede { color: var(--slate); max-width: var(--measure); margin: 0 0 3rem; }
+  h3 { font-size: 1.4rem; letter-spacing: -0.015em; line-height: 1.25; font-weight: 600; margin: 0 0 0.75rem; }
+
+  /* Projects */
+  .project {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 3rem; align-items: start; margin-bottom: 4.5rem;
+  }
+  .project:last-of-type { margin-bottom: 0; }
+  .project.reverse .project-media { order: -1; }
+  .project-question { font-size: 1.08rem; margin: 0 0 1.25rem; color: var(--slate); }
+  .findings { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+  .findings li { padding: 0.75rem 0; border-top: 1px solid var(--rule); }
+  .findings li:last-child { border-bottom: 1px solid var(--rule); }
+  .findings b { font-weight: 600; }
+  .tools { font-size: 0.92rem; color: var(--slate); margin: 0 0 1rem; }
+  .links { display: flex; gap: 1.25rem; flex-wrap: wrap; font-weight: 500; }
+  .project-media { margin: 0; }
+  .project-media img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--rule); border-radius: 4px; background: #fff;
+  }
+  .project-media figcaption { font-size: 0.88rem; color: var(--slate); margin-top: 0.6rem; }
+  .project.small { grid-template-columns: minmax(0, 1fr); max-width: var(--measure); }
+
+  /* Approach */
+  .approach { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; }
+  .approach h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .approach p { margin: 0; color: var(--slate); }
+
+  /* Experience */
+  .timeline { list-style: none; padding: 0; margin: 0; max-width: 860px; }
+  .timeline li {
+    display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1.5rem;
+    padding: 1.25rem 0; border-top: 1px solid var(--rule);
+  }
+  .timeline li:last-child { border-bottom: 1px solid var(--rule); }
+  .when { color: var(--slate); font-size: 0.95rem; }
+  .timeline h3 { font-size: 1.08rem; margin: 0 0 0.2rem; }
+  .timeline p { margin: 0; color: var(--slate); }
+
+  /* Contact */
+  .contact-list { list-style: none; padding: 0; margin: 0; font-size: 1.15rem; display: grid; gap: 0.5rem; }
+  .contact-list span { color: var(--slate); display: inline-block; min-width: 6.5rem; font-size: 0.95rem; }
+
+  footer { border-top: 1px solid var(--rule); padding: 2rem 0 3rem; color: var(--slate); font-size: 0.88rem; }
+
+  @media (max-width: 860px) {
+    .hero { padding: 3rem 0; }
+    .hero .wrap, .project { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+    .project.reverse .project-media { order: 0; }
+    .approach { grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
+    .timeline li { grid-template-columns: minmax(0, 1fr); gap: 0.25rem; }
+    section { padding: 3.25rem 0; }
+  }
+  @media (max-width: 480px) {
+    .wrap { padding: 0 1rem; }
+    .site-nav { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="#top">Dave Vu</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+      <a href="assets/Dave_Vu_Resume.pdf">Resume (PDF)</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Dave Vu</h1>
+        <p class="role">Data analyst for insurance and actuarial teams, based in Perth.</p>
+        <p class="intro">
+          I take public insurance data from raw files to tested pipelines, dashboards and written findings.
+          I'm completing a Master of Computing at Curtin University and studying for the IFoA CS1
+          Actuarial Statistics exam.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="#projects">See my projects</a>
+          <a class="button secondary" href="assets/Dave_Vu_Resume.pdf">Download resume</a>
+        </div>
+      </div>
+
+      <figure class="season-figure" aria-labelledby="season-caption">
+        <div class="legend" aria-hidden="true">
+          <span class="storm">Storm season (Oct–Mar)</span>
+          <span class="cool">Cool season (Apr–Sep)</span>
+        </div>
+        <svg class="season-chart" viewBox="0 0 460 250" role="img"
+             aria-label="Home insurance loss ratio by season. Queensland: 172 percent in storm season, 30 percent in cool season. Western Australia: 51 percent in storm season, 67 percent in cool season. The break-even line is at 100 percent.">
+          <!-- scale: 0% at x=60, 1% = 2.2px, so 100% = 280, 180% = 456 -->
+          <line class="axis" x1="60" y1="10" x2="60" y2="222"/>
+
+          <text class="state" x="0" y="66">QLD</text>
+          <rect class="bar-storm bar-grow" x="60" y="34" width="378.8" height="24" rx="2"/>
+          <text class="value" x="430" y="51" text-anchor="end" style="fill: var(--bg)">172%</text>
+          <rect class="bar-cool bar-grow d2" x="60" y="62" width="66.7" height="24" rx="2"/>
+          <text class="value" x="133" y="79">30%</text>
+
+          <text class="state" x="0" y="166">WA</text>
+          <rect class="bar-storm bar-grow d3" x="60" y="134" width="112.2" height="24" rx="2"/>
+          <text class="value" x="179" y="151">51%</text>
+          <rect class="bar-cool bar-grow d4" x="60" y="162" width="147.2" height="24" rx="2"/>
+          <text class="value" x="214" y="179">67%</text>
+
+          <line class="breakeven" x1="280" y1="10" x2="280" y2="222"/>
+          <text class="breakeven-label" x="286" y="216">100%: claims equal premium</text>
+        </svg>
+        <figcaption id="season-caption">
+          <strong>Same peril, opposite seasons.</strong> Queensland home insurance losses peak with summer storms;
+          Western Australia's peak with winter cold fronts. Loss ratios for the Householders class,
+          Dec 2023 to Jun 2026, from my APRA dashboard.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <section id="projects">
+    <div class="wrap">
+      <h2>Projects</h2>
+      <p class="section-lede">
+        Two end-to-end analyses of Australian insurance data. Each repository includes the pipeline code,
+        automated data checks and a README with the full method.
+      </p>
+
+      <article class="project">
+        <div>
+          <h3>Australian Natural Catastrophe Insurance Loss Analysis</h3>
+          <p class="project-question">Are natural catastrophes getting more expensive, or are there just more insured homes in harm's way?</p>
+          <ul class="findings">
+            <li>Reported losses rose about <b>50-fold</b> since the 1970s, but only <b>27%</b> once adjusted for prices and exposure growth.</li>
+            <li><b>Hail</b> is the costliest peril: one in three major hailstorms caused over $1bn in losses.</li>
+            <li>The choice of tail model moves the return period of a $5bn event from <b>1-in-4 to 1-in-24 years</b>; a truncated lognormal fits the record best.</li>
+          </ul>
+          <p class="tools">743 events from 1967 to 2026. Built with Python, SQLite, statsmodels and SciPy, using Poisson regression and maximum likelihood.</p>
+          <p class="links">
+            <a href="https://github.com/duogvuu/australian-catastrophe-loss-analysis">View on GitHub</a>
+            <a href="https://github.com/duogvuu/australian-catastrophe-loss-analysis/blob/main/notebooks/02_analysis.ipynb">Read the analysis</a>
+          </p>
+        </div>
+        <figure class="project-media">
+          <img src="assets/catastrophe-aal.png" width="1500" height="825" loading="lazy"
+               alt="Bar chart of average annual insured catastrophe loss by decade, comparing original, CPI-adjusted and normalised losses. Original losses rise steeply; normalised losses stay between about 1.6 and 3.6 billion dollars a year after the 1960s.">
+          <figcaption>Average annual loss by decade: most of the rise is inflation and exposure growth.</figcaption>
+        </figure>
+      </article>
+
+      <article class="project reverse">
+        <div>
+          <h3>Australian General Insurance Performance Dashboard</h3>
+          <p class="project-question">Which classes of business make an underwriting profit, and when do catastrophes push them into loss?</p>
+          <ul class="findings">
+            <li>Python pipeline turning <b>29,455 rows</b> of APRA statistics into a SQLite star schema, reconciled against <b>187</b> published subtotals.</li>
+            <li>Three-page Power BI dashboard of loss and combined ratios across <b>18 classes</b>, 8 states and 11 quarters.</li>
+            <li>Found and fixed a bias from masked data that understated the industry combined ratio (80.5% corrected to <b>81.4%</b>).</li>
+          </ul>
+          <p class="tools">APRA quarterly statistics on the AASB 17 basis. Built with Python, SQLite, Power BI and DAX.</p>
+          <p class="links">
+            <a href="https://github.com/duogvuu/apra-general-insurance-dashboard">View on GitHub</a>
+          </p>
+        </div>
+        <figure class="project-media">
+          <img src="assets/apra-dashboard.png" width="1281" height="711" loading="lazy"
+               alt="Power BI dashboard overview: insurance revenue of 187.9 billion dollars, loss ratio 64.8%, combined ratio 81.4%, a quarterly ratio trend line and combined ratio by class of business.">
+          <figcaption>Overview page: direct insurance, all financial years.</figcaption>
+        </figure>
+      </article>
+
+      <article class="project small">
+        <div>
+          <h3>NDIS Connect</h3>
+          <p class="project-question">Curtin University group project (five members): a web platform that helps NDIS participants compare service providers.</p>
+          <p>I led requirements specification and validation, and built the frontend components for participant requirements,
+            provider results and budget forecasting, working from Jira tickets with feature branches in Git.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="approach">
+    <div class="wrap">
+      <h2>How I work</h2>
+      <p class="section-lede">Insurance numbers get used for pricing and capital decisions, so I treat every result as something to prove.</p>
+      <div class="approach">
+        <div>
+          <h3>Check against the source</h3>
+          <p>Pipelines reconcile with the publisher's own totals and stop when a check fails, so errors never reach a chart.</p>
+        </div>
+        <div>
+          <h3>Say what the data can't</h3>
+          <p>Each finding comes with its caveats: masked values, short records, and trends that aren't statistically significant.</p>
+        </div>
+        <div>
+          <h3>Use AI, verify everything</h3>
+          <p>I build with Claude Code and Cursor to move faster, and validate every output against the data before it ships.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <h2>Experience and study</h2>
+      <p class="section-lede">Operational roles where I kept records accurate, plus formal study in computing and actuarial statistics.</p>
+      <ul class="timeline">
+        <li>
+          <span class="when">Mar 2026 – Dec 2027</span>
+          <div>
+            <h3>Master of Computing (Computer Science), Curtin University</h3>
+            <p>Alongside self-study for the IFoA CS1 Actuarial Statistics exam, sitting April 2027.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">Feb 2026 – now</span>
+          <div>
+            <h3>Warehouse & Installations Assistant, Henri Living</h3>
+            <p>Brought large-item assembly in-house, halving delivery lead times and replacing outsourced work, with a 100% first-time completion rate.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">Apr – Sep 2025</span>
+          <div>
+            <h3>Desktop Support Technician, V4 IT Services</h3>
+            <p>On-site IT support for home and business clients in Darwin, with a 100% job completion rate.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">Apr – May 2025</span>
+          <div>
+            <h3>Vehicles & Parts Maintenance Coordinator, F&amp;J Bitumen Services</h3>
+            <p>Halved turnaround on fleet and parts requests and processed 200–300 orders, with Excel reporting on stock and service schedules.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">Oct 2021 – Dec 2024</span>
+          <div>
+            <h3>Bachelor of Business (Logistics and Supply Chain Management), RMIT</h3>
+            <p>Followed by Master of Data Science coursework at Charles Darwin University in 2025.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <h2>Contact</h2>
+      <p class="section-lede">I'm looking for data analyst roles in insurance or actuarial teams in Perth or Melbourne.</p>
+      <ul class="contact-list">
+        <li><span>Email</span><a href="mailto:duong.vuquy.2510@gmail.com">duong.vuquy.2510@gmail.com</a></li>
+        <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/duogvuu">linkedin.com/in/duogvuu</a></li>
+        <li><span>GitHub</span><a href="https://github.com/duogvuu">github.com/duogvuu</a></li>
+        <li><span>Resume</span><a href="assets/Dave_Vu_Resume.pdf">Download PDF</a></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    Charts use data from APRA, the Insurance Council of Australia and the ABS. This site is independent and not endorsed by those organisations.
+  </div>
+</footer>
+
+</body>
+</html>
